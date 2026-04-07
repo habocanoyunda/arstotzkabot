@@ -33,9 +33,14 @@ Respond in this exact JSON format:
 
 Be fair. If evidence is insufficient, default to warn or acquit.`;
 
-// Prompts are loaded once at startup; bot restart picks up changes
-const MENTION_SYSTEM_PROMPT = loadPrompt('mention', DEFAULT_MENTION_PROMPT);
+// Mutable prompt state — allows /prompt command to reload without restart
+let MENTION_SYSTEM_PROMPT = loadPrompt('mention', DEFAULT_MENTION_PROMPT);
 const JUDGE_SYSTEM_PROMPT = loadPrompt('judge', DEFAULT_JUDGE_PROMPT);
+
+export function reloadPrompts() {
+  MENTION_SYSTEM_PROMPT = loadPrompt('mention', DEFAULT_MENTION_PROMPT);
+  console.log('[claude] Mention prompt reloaded');
+}
 
 // Web search is a built-in Anthropic server-side tool — no extra API key needed
 const WEB_SEARCH_TOOL = { type: 'web_search_20250305', name: 'web_search' };
