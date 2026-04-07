@@ -1,0 +1,14 @@
+app = "discord-ai-bot"
+primary_region = "ams"
+
+[build]
+
+[env]
+  NODE_ENV = "production"
+
+[[mounts]]
+  source = "bot_data"
+  destination = "/data"
+
+[processes]
+  app = "node src/index.js"
