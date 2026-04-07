@@ -31,9 +31,9 @@ export async function execute(interaction) {
 
   const textInput = new TextInputBuilder()
     .setCustomId('prompt_text')
-    .setLabel('System Prompt')
+    .setLabel('Append to system prompt')
     .setStyle(TextInputStyle.Paragraph)
-    .setValue(currentPrompt.slice(0, 4000)) // Discord modal limit
+    .setPlaceholder('Yazılanlar dosyanın sonuna eklenir...')
     .setRequired(true)
     .setMaxLength(4000);
 
@@ -54,16 +54,18 @@ export async function execute(interaction) {
   const newPrompt = modalInteraction.fields.getTextInputValue('prompt_text').trim();
 
   try {
-    writeFileSync(promptPath, newPrompt, 'utf8');
+    // Append to existing prompt with a newline separator
+    const updated = currentPrompt + '\n' + newPrompt;
+    writeFileSync(promptPath, updated, 'utf8');
     reloadPrompts();
     await modalInteraction.reply({
-      content: 'System prompt updated and reloaded.',
+      content: 'Prompt güncellendi ve yüklendi.',
       ephemeral: true,
     });
   } catch (err) {
     console.error('[prompt] Failed to save prompt:', err);
     await modalInteraction.reply({
-      content: 'Failed to save prompt. Check bot logs.',
+      content: 'Prompt kaydedilemedi. Loglara bak.',
       ephemeral: true,
     });
   }
